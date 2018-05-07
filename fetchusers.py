@@ -19,6 +19,7 @@ import pickle as pkl
 
 from BeautifulSoup import BeautifulSoup, UnicodeDammit
 from absl import flags as gflags  # workaround since gflags is deprecated
+import selenium
 from selenium import webdriver
 import pandas as pd
 import regex
@@ -30,7 +31,7 @@ CHROME_DRIVER_PATH = 'chromedriver_win32\chromedriver.exe'
 cookies = pkl.load(open('cookies.pickle', 'rb'))
 
 FLAGS = gflags.FLAGS
-gflags.DEFINE_string('outfile', 'profiles.csv', 'Filename for output')
+gflags.DEFINE_string('outfile', 'profiles.pickle', 'Filename for output')
 gflags.DEFINE_string('usernames_file', 'usernames_20180506_1.csv',
                      'File with usernames to fetch')
 gflags.DEFINE_string('completed_usernames_file', 'completed_usernames.csv',
@@ -47,7 +48,18 @@ def pull_profile_and_essays(browser, username):
     print "Fetching profile HTML for", username + "... ",
     html = None
 
-    browser.get(url)
+    for attempt in range(2):
+        try:
+            print('\nNavigating to profile page, attempt %s' % (attempt + 1))
+            browser.get(url)
+        except selenium.common.exceptions.TimeoutException as e:
+            if attempt < 1:
+                continue
+            else:
+                raise
+        else:
+            break
+
     html = browser.page_source
     if not html:
         print "No html returned."
