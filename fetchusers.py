@@ -148,7 +148,8 @@ def parse_profile_html(html):
     else:
         essays = pd.DataFrame()
 
-    profile = pd.concat([basics, background, misc, userinfo, essays], axis=1)
+    profile = pd.concat([basics, background, misc,
+                         lookingfor, userinfo, essays], axis=1)
 
     return profile
 
