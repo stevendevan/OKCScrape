@@ -49,22 +49,25 @@ def main(argv):
 
     # look into itertools.repeat for this instead
     browser = webdriver.Chrome(executable_path=CHROME_DRIVER_PATH)
-    for run in range(100):
-        print 'Sleeping...',
-        time.sleep(10)  # Avoid throttling by OKC servers
-        print 'querying...',
-        browser.get(MATCH_URL)
-        print 'done.'#, r.url
+    try:
+        for run in range(100):
+            print 'Sleeping...',
+            time.sleep(10)  # Avoid throttling by OKC servers
+            print 'querying...',
+            browser.get(MATCH_URL)
+            print 'done.'#, r.url
 
-        usernames = extract_usernames(browser.page_source)#.text)
-        # Write incrementally in case the program crashes
-        for u in usernames:
-            writer.writerow([u])
-        f.flush()
-        all_usernames.extend(usernames)
-
-    f.close()
-    print 'Found %d total users' % len(all_usernames)
+            usernames = extract_usernames(browser.page_source)#.text)
+            # Write incrementally in case the program crashes
+            for u in usernames:
+                writer.writerow([u])
+            f.flush()
+            all_usernames.extend(usernames)
+    except:
+        raise
+    finally:
+        f.close()
+        print 'Found %d total users' % len(all_usernames)
 
 
 if __name__ == '__main__':
