@@ -26,13 +26,17 @@ import regex
 
 import profileparser
 
+# You must have the chromedriver executable available
 CHROME_DRIVER_PATH = 'chromedriver_win32\chromedriver.exe'
+
 # My cookies are stored in a .pickle as a list of dicts
 cookies = pkl.load(open('cookies.pickle', 'rb'))
 
 FLAGS = gflags.FLAGS
 gflags.DEFINE_string('outfile', 'profiles.pickle', 'Filename for output')
-gflags.DEFINE_string('usernames_file', 'usernames_20180506_1.csv',
+
+# You will have to provide your own usernames file
+gflags.DEFINE_string('usernames_file', 'usernames_20180511.csv',
                      'File with usernames to fetch')
 gflags.DEFINE_string('completed_usernames_file', 'completed_usernames.csv',
                      'File with usernames we have already fetched')
