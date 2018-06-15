@@ -1,3 +1,4 @@
+# Python 3.x
 #
 
 #
@@ -42,3 +43,17 @@ def create_wordcount(df):
     df = df.assign(wordcount=wordcounts)
 
     return df
+
+
+def main():
+    infolder = 'data/input/'
+    outfolder = 'data/working/'
+
+    df_raw = okctools.load_profiles_df(version='py3')
+    df_no_empty = remove_empty_profiles(df_raw)
+    df = create_wordcount(df_no_empty)
+    df.drop(['essays', 'city', 'region'], inplace=True)
+
+
+if __name__ == "__main__":
+    main()
