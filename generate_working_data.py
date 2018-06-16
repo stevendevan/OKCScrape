@@ -45,6 +45,21 @@ def create_wordcount(df):
     return df
 
 
+def lists_to_dummies(df):
+    """DataFrame -> DataFrame
+    Turn list values into dummy variables. For example, df.orientation[0] might
+    be the list ['pansexual','queer'], which would be turned into the dummy
+    variables orientation_pansexual and orientation_queer
+"""
+    
+    listcols = []
+    for col in df.drop('essays', axis=1).columns:
+        if type(df.loc[0, col]) == list:
+            listcols.append(col)
+
+    print(listcols)
+
+
 def main():
     infolder = 'data/input/'
     outfolder = 'data/working/'
