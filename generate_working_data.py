@@ -1,7 +1,7 @@
 # Python 3.x
 #
 
-#
+import numpy as np
 
 import okctools
 
@@ -51,13 +51,46 @@ def lists_to_dummies(df):
     be the list ['pansexual','queer'], which would be turned into the dummy
     variables orientation_pansexual and orientation_queer
 """
-    
+
     listcols = []
     for col in df.drop('essays', axis=1).columns:
         if type(df.loc[0, col]) == list:
             listcols.append(col)
 
     print(listcols)
+
+
+def repair_lang_features(df):
+    """DataFrame -> DataFrame
+    Fix lang_primary and lang_secondary fields from data collected using older
+    versions of fetchusers.py that resulted in stray words being collected into
+    the data such as 'very' and 'it'
+    """
+
+    df.lang_primary.fillna(value=np.nan, inplace=True)
+    df.lang_secondary.fillna(value=np.nan, inplace=True)
+    # List of languages directly from OKC website
+    langs = open('okc_lang_options.txt', 'r').read().lower().splitlines()
+
+    lang_columns = ['lang_primary', 'lang_secondary']
+    for column in lang_columns:
+        lang_col_new = []
+        for langlist in df[column]:
+            langlist_new = []
+            if langlist is np.nan:
+                lang_col_new.append(np.nan)
+                continue
+            if 'c' in langlist:
+                langlist_new.append('c++')
+            if 'sign' in langlist:
+                langlist_new.append('sign language')
+            for lang in langlist:
+                if lang in langs:
+                    langlist_new.append(lang)
+            lang_col_new.append(langlist_new)
+        df[column] = lang_col_new
+
+    return df
 
 
 def main():
