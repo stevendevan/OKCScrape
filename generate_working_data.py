@@ -50,14 +50,36 @@ def lists_to_dummies(df):
     Turn list values into dummy variables. For example, df.orientation[0] might
     be the list ['pansexual','queer'], which would be turned into the dummy
     variables orientation_pansexual and orientation_queer
-"""
+    """
 
+    # Grab all columns whose values are lists, excluding 'essays'
     listcols = []
     for col in df.drop('essays', axis=1).columns:
-        if type(df.loc[0, col]) == list:
+        if all(df[col].isnull()):
+            print('Column "{}" has no valid values. You can remove these with '
+                  'the "remove_empty_columns" function'
+                  .format(col))
+            continue
+        elif type(df[col][df[col].notna()].iloc[0]) == list:
             listcols.append(col)
 
     print(listcols)
+
+
+def remove_empty_columns(df):
+    """DataFrame -> DataFrame
+    Remove columns in DataFrame that have no valid values (i.e. all NaN)
+    """
+
+    emptylist = []
+    for col in df.columns:
+        if all(df[col].isnull()):
+            emptylist.append(col)
+
+    # Do not drop in place, as that will modify the actual df used as input.
+    df = df.drop(columns=emptylist)
+
+    return df
 
 
 def repair_lang_features(df):
