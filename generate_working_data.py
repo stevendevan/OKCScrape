@@ -2,6 +2,7 @@
 #
 
 import numpy as np
+import pandas as pd
 
 import okctools
 
@@ -43,15 +44,17 @@ def create_wordcount(df):
     return df
 
 
-def lists_to_dummies(df):
-    """DataFrame -> DataFrame
+def lists_to_dummies(df, drop=False):
+    """DataFrame, bool -> DataFrame
     Turn list values into dummy variables. For example, df.orientation[0] might
     be the list ['pansexual','queer'], which would be turned into the dummy
     variables orientation_pansexual and orientation_queer
+
+    TODO:
+    add arg to specify exactly which columns to dummify
     """
 
-    # Grab all columns whose values are lists, excluding 'essays'
-    listcols = []
+    # Loops for all columns whose values are lists, excluding 'essays'
     for col in df.drop(columns='essays').columns:
         if all(df[col].isnull()):
             print('Column "{}" has no valid values. You can remove these with '
@@ -59,14 +62,18 @@ def lists_to_dummies(df):
                   .format(col))
             continue
         elif type(df[col][df[col].notna()].iloc[0]) == list:
-            listcols.append(col)
 
-    print(listcols)
-    for col in listcols:
-        valueset = set()
-        for valuelist in df[df[col].notna()][col]:
-            for value in valuelist:
-                valueset.add(value)
+            df_dummies = df.loc[df[col].notna(), col] \
+                .apply(lambda lst: pd.Series([1] * len(lst), index=lst)
+                       .add_prefix(col + '_')) \
+                .fillna(0, downcast='infer')
+
+            df_dummies.reindex(index=df.index, fill_value=0)
+            df = pd.concat([df, df_dummies], axis=1, sort=False)
+            if drop:
+                df.drop(columns=col, inplace=True)
+
+    return df
 
 
 def remove_empty_columns(df):
@@ -120,10 +127,10 @@ def main():
     infolder = 'data/input/'
     outfolder = 'data/working/'
 
-    df_raw = okctools.load_profiles_df(version='py3')
-    df_no_empty = remove_empty_profiles(df_raw)
-    df = create_wordcount(df_no_empty)
-    df.drop(['essays', 'city', 'region'], inplace=True)
+    df = okctools.load_profiles_df(version='py3')
+    remove_empty_profiles(df)
+    remove_empty_columns(df)
+    repair_lang_features(df)
 
 
 if __name__ == "__main__":
