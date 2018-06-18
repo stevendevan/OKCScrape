@@ -21,10 +21,8 @@ def remove_empty_profiles(df):
     because empty profiles will only contain a username and nothing else.
     """
 
-    df_out = df[df.name.notna()]
-    df_out.reset_index(drop=True, inplace=True)
-
-    return df_out
+    df.drop(index=df.index[df.name.isnull().values], inplace=True)
+    df.reset_index(drop=True, inplace=True)
 
 
 def create_wordcount(df):
