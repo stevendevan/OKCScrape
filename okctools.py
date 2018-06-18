@@ -25,7 +25,7 @@ def load_profiles_df(filename='profiles.pickle', version='py2'):
             else:
                 print('Invalid version')
 
-            df = df.append(temp, ignore_index=True)
+            df = df.append(temp, ignore_index=True, sort=False)
     except EOFError:
         print('Finished loading file.')
     finally:
