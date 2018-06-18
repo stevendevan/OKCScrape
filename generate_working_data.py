@@ -54,7 +54,7 @@ def lists_to_dummies(df):
 
     # Grab all columns whose values are lists, excluding 'essays'
     listcols = []
-    for col in df.drop('essays', axis=1).columns:
+    for col in df.drop(columns='essays').columns:
         if all(df[col].isnull()):
             print('Column "{}" has no valid values. You can remove these with '
                   'the "remove_empty_columns" function'
@@ -64,6 +64,11 @@ def lists_to_dummies(df):
             listcols.append(col)
 
     print(listcols)
+    for col in listcols:
+        valueset = set()
+        for valuelist in df[df[col].notna()][col]:
+            for value in valuelist:
+                valueset.add(value)
 
 
 def remove_empty_columns(df):
@@ -77,9 +82,7 @@ def remove_empty_columns(df):
             emptylist.append(col)
 
     # Do not drop in place, as that will modify the actual df used as input.
-    df = df.drop(columns=emptylist)
-
-    return df
+    df.drop(columns=emptylist, inplace=True)
 
 
 def repair_lang_features(df):
@@ -99,6 +102,7 @@ def repair_lang_features(df):
         lang_col_new = []
         for langlist in df[column]:
             langlist_new = []
+            langset = set()  # To check and avoid duplicates
             if langlist is np.nan:
                 lang_col_new.append(np.nan)
                 continue
@@ -107,12 +111,11 @@ def repair_lang_features(df):
             if 'sign' in langlist:
                 langlist_new.append('sign language')
             for lang in langlist:
-                if lang in langs:
+                if lang in langs and lang not in langset:
                     langlist_new.append(lang)
+                    langset.add(lang)
             lang_col_new.append(langlist_new)
         df[column] = lang_col_new
-
-    return df
 
 
 def main():
