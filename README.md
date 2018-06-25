@@ -5,10 +5,12 @@ Scrape OKC profiles into pandas DataFrames for exploration
 - Look at [profileparser.py](https://github.com/stevendevan/OKCScrape/blob/master/profileparser.py) for regex work and data extraction
 - Look at my [Ipython notebook](https://github.com/stevendevan/OKCScrape/blob/master/OKCScrape_exploration.ipynb) to see how I explore data
 
-I was considering trying to predict word counts for each user based on the other data in their profiles, but decided to leave off at EDA and focus on kaggle competitions and other projects. I may come back to do some modeling on this data at some point.
+Due to the fact that essentially no business-side data is available to scrape, I have chosen 'user essay total word count' as a candidate for predictive modeling.
 
 # Using OKCScrape
 As I mention in the code comments, this project is adapted from a [~4-year old project](https://github.com/wetchler/okcupid), back when OKC profiles had tabulated data. Most of the data is now contained in sentences generated from user information, and is much more difficult to extract data from.
+
+To use [fetchusers.py](https://github.com/stevendevan/OKCScrape/blob/master/fetchusers.py), you will need to grab your OKCupid cookies from your browser and feed those to selenium. Check out the code to see how I currently do it. The way you extract, store, and retrieve your cookies is open-ended, so you can accomplish that however is easiest for you.
 ## Dependencies
 I originally used Python 2.7 for this project, but it could easily be adapted to 3.x
 I'm not using a virtual environment, so I'll list the python dependencies here.
