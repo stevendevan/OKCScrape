@@ -17,7 +17,7 @@ def function1(df):
 
 
 def remove_empty_profiles(df):
-    """DataFrame -> DataFrame
+    """DataFrame -> None (Operates inplace on DataFrame object)
     Remove empty profiles from OKC profiles DataFrame. This is straightforward
     because empty profiles will only contain a username and nothing else.
     """
@@ -77,7 +77,7 @@ def lists_to_dummies(df, drop=False):
 
 
 def remove_empty_columns(df):
-    """DataFrame -> DataFrame
+    """DataFrame -> None (Operates inplace on DataFrame object)
     Remove columns in DataFrame that have no valid values (i.e. all NaN)
     """
 
@@ -91,7 +91,7 @@ def remove_empty_columns(df):
 
 
 def repair_lang_features(df):
-    """DataFrame -> DataFrame
+    """DataFrame -> None (Operates inplace on DataFrame object)
     Fix lang_primary and lang_secondary fields from data collected using older
     versions of fetchusers.py that resulted in stray words being collected into
     the data such as 'very' and 'it'
