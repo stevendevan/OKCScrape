@@ -141,12 +141,13 @@ def parse_misc(text):
     # This method isn't as pretty as I would like, but it gets the job done.
     categories = ['smokes', 'drinks', 'drugs']
     # sometimes uses 'do drugs', sometimes 'does drugs'
-    terms = ['smokes', 'drinks', 'doe?s? drugs']
-    matches = [regex.findall(r'\w+(?= %s)|(?<=%s )\w+' % (terms[0], terms[0]), text),
-               regex.findall(r'\w+(?= %s)|(?<=%s )\w+' %
-                             (terms[1], terms[1]), text),
-               regex.findall(
-                   r'[\w(?:\u2019)]+(?= %s)|(?<=%s )[\w(?:\u2019)]+' % (terms[2], terms[2]), text),
+    terms = ['smokes', 'drinks?', 'doe?s? drugs']
+    matches = [regex.findall(r'\w+(?= %s)|(?<=%s )\w+'
+                             % (terms[0], terms[0]), text),
+               regex.findall(r'[\w(?:\u2019)]+(?= %s)|(?<=%s )[\w(?:\u2019)]+' 
+                             % (terms[1], terms[1]), text),
+               regex.findall(r'[\w(?:\u2019)]+(?= %s)|(?<=%s )[\w(?:\u2019)]+' 
+                             % (terms[2], terms[2]), text),
                ]
 
     # standardize and assign values
