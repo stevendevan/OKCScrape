@@ -123,7 +123,8 @@ def repair_lang_features(df):
         df[column] = lang_col_new
 
 
-def main():
+if __name__ == "__main__":
+
     infolder = 'data/input/'
     outfolder = 'data/working/'
 
@@ -131,7 +132,12 @@ def main():
     remove_empty_profiles(df)
     remove_empty_columns(df)
     repair_lang_features(df)
+    #df = lists_to_dummies(df)
 
+    # See the notebook for details on the "why" of what I'm doing here.
+    df.loc[502, 'status'] = 'single' # Manual inference
+    df.loc[203, 'gender'] = ['woman'] # Manual inference, simplistic assumption
 
-if __name__ == "__main__":
-    main()
+    replace_empty_list = ['lang_primary', 'lang_secondary', 'ethnicity', '']
+    leave_alone = ['dogs', 'cats', 'height', 'smokes', 'build', 'drinks',
+                   'build', 'education', 'ed_prefix', '']
