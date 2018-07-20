@@ -1,3 +1,6 @@
+### Notice
+I've started a redo of the webscraper in Python 3 and now as a command line app. [Find it here.](https://github.com/stevendevan/okcscrape3)
+
 # OKCScrape
 Scrape OKC profiles into pandas DataFrames for exploration
 
